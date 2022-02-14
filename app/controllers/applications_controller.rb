@@ -1,6 +1,10 @@
 class ApplicationsController < ApplicationController
   def show
     @application = Application.find(params[:id])
+    # = Application.add_new_pet(Pet.find_by(name: params[:search_name]), @application.id) if params[:search_name]
+    @pets = Pet.where(params[:id] == @application.id)
+    @pet = Pet.find_by(name: params[:search_name])
+    
   end
 
   def new
