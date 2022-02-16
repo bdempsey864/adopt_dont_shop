@@ -1,8 +1,10 @@
 class ApplicationsController < ApplicationController
   def show
     @application = Application.find(params[:id])
-    @pets = Pet.joins(:pet_applications).where(pet_applications: {application_id: @application.id}).pluck(:name)
-    @pet = Pet.find_by(name: params[:search_name])
+    @pets = @application.pets
+    if params[:search_name]
+      @results = Pet.search(params[:search_name])
+    end
     
   end
 
@@ -17,6 +19,12 @@ class ApplicationsController < ApplicationController
       redirect_to "/applications/new"
       flash[:alert] = "Error: #{error_message(application.errors)}"
     end
+  end
+
+  def update
+    application = Application.find(params[:id])
+    application.update(description: params[:description], status: "Pending")
+    redirect_to "/applications/#{application.id}"
   end
 
     private
